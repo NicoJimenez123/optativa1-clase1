@@ -1,13 +1,9 @@
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Proceso en ejecución con PID: " + ProcessHandle.current().pid());
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        System.out.println("Proceso finalizado");
+       FileRepository repo = new FileRepository();
+       ArrayList<DataInfo> datos = repo.leer();
+       datos.forEach(dataInfo -> System.out.print(dataInfo.imprimir() + "\n"));
     }
 }
