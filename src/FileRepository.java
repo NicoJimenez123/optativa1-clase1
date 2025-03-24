@@ -1,7 +1,8 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 public class FileRepository {
     private final String csvFile;
@@ -18,19 +19,17 @@ public class FileRepository {
     }
 
     public ArrayList<DataInfo> leer() {
-        String line;
         ArrayList<DataInfo> datos = new ArrayList<DataInfo>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(this.csvFile))) {
-            // Leer línea por línea, mientras que la línea no sea nula
-            while ((line = br.readLine()) != null) {
-                // Dividir la línea en campos usando el separador
-                String[] campos = line.split(this.csvSeparator);
-
-                // Procesar
-                DataInfo data = new DataInfo(Integer.parseInt(campos[0]), campos[1], Integer.parseInt(campos[2]), campos[3], Integer.parseInt(campos[4]));
-                datos.add(data);
-            }
+        try (Stream<String> lineas = Files.lines(Paths.get(csvFile))) {
+            lineas
+                .parallel() // Procesamiento en paralelo
+                .map(linea -> linea.split(csvSeparator))
+                .forEach(campos -> {
+                    // Procesar
+                    DataInfo data = new DataInfo(Integer.parseInt(campos[0]), campos[1], Integer.parseInt(campos[2]), campos[3], Integer.parseInt(campos[4]));
+                    datos.add(data);
+                });
         } catch (IOException e) {
             e.printStackTrace();
         }
