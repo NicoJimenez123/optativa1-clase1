@@ -1,9 +1,15 @@
-import java.util.ArrayList;
+import controller.DataController;
+import repository.FileRepository;
+import view.DataView;
 
 public class Main {
     public static void main(String[] args) {
-       FileRepository repo = new FileRepository();
-       ArrayList<DataInfo> datos = repo.leer();
-       datos.forEach(dataInfo -> System.out.print(dataInfo.imprimir() + "\n"));
+        // Initialize components
+        FileRepository repository = new FileRepository();
+        DataView view = new DataView();
+        DataController controller = new DataController(repository, view);
+
+        // Execute main flow
+        controller.loadAndDisplayData();
     }
 }
